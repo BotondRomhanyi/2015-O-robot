@@ -3,10 +3,52 @@ package Main;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        try {
+            List<Codes> codes = new ArrayList<>();
+
+            //1.feladat
+            try (BufferedReader reader = new BufferedReader(new FileReader("progs.txt"))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    Codes code = new Codes(line);
+                    codes.add(code);
+                }
+            }
+
+            //2.feladat
+            System.out.println("2. Feladat: Tanulók száma: " + codes.size() + " fő");
+
+            //3.feladat
+            int badCodeCounter = 0;
+            for (Codes code : codes) {
+                if (!code.IsCodeCorrect()) badCodeCounter++;
+            }
+            System.out.println("3. Feladat: Helytelen kódsorozatok száma: " + badCodeCounter);
+
+            //4.feladat
+            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("ivsz.txt")))) {
+                for (Codes code : codes)
+                    if (code.IsCodeCorrect())
+                        writer.print(code.name + " " + code.DirectionChangeCounter() + "\n");
+            }
+
+            //5.feladat
+            int bestCode = 0;
+            for (int i = 0; i < codes.size(); i++) {
+                if (codes.get(i).IsCodeCorrect())
+                    if (codes.get(i).Distance() > codes.get(bestCode).Distance()) bestCode = i;
+            }
+            System.out.println("5. Feladat: Legtávolabbra jutó robot vezérlését készítette: " + codes.get(bestCode).name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+    /*public static void main(String[] args) {
         try {
             List<Codes> codes = new ArrayList<>();
 
@@ -90,5 +132,4 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-}
+    }*/
